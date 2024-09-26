@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <main>
+  <div>
     {{$t('test')}}
-  </main>
+  </div>
 </template>
