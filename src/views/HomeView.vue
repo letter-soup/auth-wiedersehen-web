@@ -3,5 +3,6 @@
 
 <template>
   <main>
+    {{$t('test')}}
   </main>
 </template>
