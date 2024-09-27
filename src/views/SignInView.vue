@@ -2,6 +2,10 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+
+const loginHandler = () => {
+  console.log('debug:SignInView.vue:loginHandler; ')
+}
 </script>
 
 <template>
@@ -38,7 +42,7 @@ import { Label } from '@/components/ui/label'
             </div>
             <Input id="password" type="password" required />
           </div>
-          <Button type="submit" class="w-full">
+          <Button type="submit" class="w-full" @click="loginHandler">
             {{$t('sign-in:cta')}}
           </Button>
         </div>
