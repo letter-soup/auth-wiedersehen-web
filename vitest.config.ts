@@ -7,8 +7,33 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
+      setupFiles: 'vitest.setup.ts',
       exclude: [...configDefaults.exclude, 'e2e/**'],
-      root: fileURLToPath(new URL('./', import.meta.url))
+      root: fileURLToPath(new URL('./', import.meta.url)),
+      coverage: {
+        provider: 'istanbul',
+        reporter: ['html'],
+        exclude: [
+          '**/assets/**',
+          '**/e2e/**',
+          '**/*.cjs',
+
+          '**/src/App.vue',
+          '**/src/main.ts',
+          '**/src/router/',
+          '**/src/components/ui/**',
+
+          '**/src/utils/locale.ts',
+
+          '**/*.constant.ts',
+          '**/*.model.ts',
+          '**/*.spec.ts',
+
+          '**/__mock__/**',
+          '**/__fixture__/**',
+          '**/__temp__/**',
+        ],
+      }
     }
   })
 )

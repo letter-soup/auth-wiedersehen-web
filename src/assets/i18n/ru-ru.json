@@ -1,0 +1,10 @@
+{
+  "sign-in:cta": "Вход",
+  "sign-in:description": "Введите email, чтоб войти в аккаунт",
+  "sign-in:email": "Email",
+  "sign-in:header": "Вход",
+  "sign-in:no-account": "Еще не зарегистрированы?",
+  "sign-in:password": "Пароль",
+  "sign-in:password-reset": "Забыли свой пароль?",
+  "sign-in:sign-up": "Регистрация"
+}
