@@ -9,6 +9,7 @@ export default {
   prefix: "",
 
   content: [
+    './index.html',
     './pages/**/*.{ts,tsx,vue}',
     './components/**/*.{ts,tsx,vue}',
     './app/**/*.{ts,tsx,vue}',
