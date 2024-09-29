@@ -1,11 +1,25 @@
 <script setup lang="ts">
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Toggle } from '@/components/ui/toggle'
+import { ArrowLeft } from 'lucide-vue-next'
+import { useRouter } from 'vue-router';
+import { computed, type ComputedRef, ref, type Ref } from 'vue'
 
-const signUpHandler = () => {
-  console.log('debug:SignInView.vue:signUpHandler; ')
+const { currentRoute, back, push } = useRouter();
+type SignUpStep = 'email' | 'password' | 'tos'
+
+const currentStep: Ref<SignUpStep> = ref('email')
+
+const canGoBack: ComputedRef<boolean> = computed(() => currentStep.value !== 'email')
+
+function validateEmail(scrollNext: () => void, next: SignUpStep): void {
+  currentStep.value = next
+  scrollNext()
 }
+
 </script>
 
 <template>
@@ -22,28 +36,36 @@ const signUpHandler = () => {
         </div>
         <div class="grid gap-4">
           <form>
-            <div class="grid gap-2">
-              <Label for="email">{{ $t('sign-up:email') }}</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required />
-            </div>
-            <div class="grid gap-2">
-              <div class="flex items-center">
-                <Label for="password">{{ $t('sign-up:password') }}</Label>
-                <a href="/reset-password" class="ml-auto inline-block text-sm underline">
-                  {{ $t('sign-up:password-reset') }}
-                </a>
-              </div>
-              <Input id="password" type="password" required />
-            </div>
-            <Button type="submit" class="w-full" @click="signUpHandler">
-              {{ $t('sign-up:cta') }}
-            </Button>
+            <Carousel
+              v-slot="{ scrollNext, scrollPrev }"
+              class="relative w-full max-w-xs"
+              :opts="{ watchDrag: false, duration: 0 }"
+            >
+              <Toggle v-if="canGoBack" @click="scrollPrev">
+                <ArrowLeft class="h-4 w-4" />
+              </Toggle>
+              <CarouselContent>
+                <CarouselItem>
+                  <div class="grid gap-2">
+                    <Label for="email">{{ $t('sign-up:email') }}</Label>
+                    <Input id="email" type="email" placeholder="m@example.com" required />
+                    <Button @click="validateEmail(scrollNext)"> Next </Button>
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                  <div class="grid gap-2">
+                    <Label for="password">{{ $t('sign-up:password') }}</Label>
+                    <Input id="password" type="password" required />
+                  </div>
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
           </form>
         </div>
         <div class="mt-4 text-center text-sm">
-          {{ $t('sign-up:no-account') }}
+          {{ $t('sign-up:has-account') }}
           <a href="/sign-up" class="underline">
-            {{ $t('sign-up:sign-up') }}
+            {{ $t('sign-up:sign-in') }}
           </a>
         </div>
       </div>
