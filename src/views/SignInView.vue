@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-const loginHandler = () => {
-  console.log('debug:SignInView.vue:loginHandler; ')
+const signInHandler = () => {
+  console.log('debug:SignInView.vue:signInHandler; ')
 }
 </script>
 
@@ -34,7 +34,7 @@ const loginHandler = () => {
             </div>
             <Input id="password" type="password" required />
           </div>
-          <Button type="submit" class="w-full" @click="loginHandler">
+          <Button type="submit" class="w-full" @click="signInHandler">
             {{ $t('sign-in:cta') }}
           </Button>
         </div>
