@@ -13,6 +13,7 @@ export const locale: TLocale = 'en-US'
 export const fallbackLocale: TLocale = 'en-US'
 
 export const i18n = createI18n({
+  legacy: false,
   locale,
   fallbackLocale,
   messages: locales

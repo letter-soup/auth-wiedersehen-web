@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import SignInView from '@/views/SignInView.vue'
-import SignUpView from '@/views/SignUpView.vue'
+import SignUpView from '@/views/SignUpView/SignUpView.vue'
 import ResetPasswordView from '@/views/ResetPasswordView.vue'
 
 const router = createRouter({
