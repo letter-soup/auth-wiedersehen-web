@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { formSchema, signUpSteps } from '@/views/SignUpView/constants'
+import { ChevronLeft } from 'lucide-vue-next'
 
 const stepIndex = ref(1)
 const stepDescription: ComputedRef<string> = computed(() => signUpSteps[stepIndex.value - 1].description)
@@ -38,7 +39,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
 <template>
   <div class="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
     <div class="flex items-center justify-center py-12">
-      <div class="mx-auto grid w-[350px] gap-6">
+      <div class="mx-auto grid w-[350px] gap-6 relative">
         <div class="grid gap-2 text-center">
           <h1 class="text-3xl font-bold">
             {{ $t('sign-up:header') }}
@@ -54,7 +55,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
           :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
         >
           <Stepper
-            v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep }"
+            v-slot="{ isNextDisabled, nextStep, isPrevDisabled, prevStep }"
             v-model="stepIndex"
             class="block w-full"
           >
@@ -109,6 +110,16 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
                   type="button"
                 >
                   {{ $t('sign-up:step:cta') }}
+                </Button>
+
+                <Button
+                  v-if="!isPrevDisabled"
+                  variant="outline"
+                  size="icon"
+                  @click="prevStep()"
+                  class="absolute top-4 left-0"
+                >
+                  <ChevronLeft class="w-4 h-4" />
                 </Button>
 
                 <Button v-if="isNextDisabled" type="submit" class="w-full">
