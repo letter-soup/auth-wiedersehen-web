@@ -28,6 +28,19 @@ watchEffect(() => {
   history.pushState( { stepIndex: stepIndex.value }, `Step ${stepIndex.value}`, `#step-${stepIndex.value}`)
 })
 
+function validateEmail(
+  values: Record<string, string>,
+  nextStep: () => void,
+  setFieldError: (field: string, error: string) => void,
+) {
+  // if (emailAlreadyRegistered) {
+  //   setFieldError('email', 'Email is already in use. Try resetting your password')
+  //   return
+  // }
+
+  nextStep()
+}
+
 function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
   e.preventDefault()
   validate()
@@ -58,7 +71,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
           </p>
         </div>
         <Form
-          v-slot="{ meta, values, validate }"
+          v-slot="{ meta, values, validate, setFieldError }"
           as=""
           keep-values
           :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
@@ -91,7 +104,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
 
                   <Button
                     class="w-full"
-                    @click="meta.valid && nextStep()"
+                    @click="meta.valid && validateEmail(values, nextStep, setFieldError)"
                     type="button"
                   >
                     {{ $t('sign-up:step:cta') }}
