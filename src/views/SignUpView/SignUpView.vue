@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
-import { computed, type ComputedRef, h, ref } from 'vue'
+import { computed, type ComputedRef, h, type Ref, ref, watchEffect } from 'vue'
 import { Stepper, StepperItem, StepperTrigger } from '@/components/ui/stepper'
 import {
   Form,
@@ -14,10 +14,19 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { formSchema, signUpSteps } from '@/views/SignUpView/constants'
-import { ChevronLeft } from 'lucide-vue-next'
+import { useWindowEventListener } from '@/composable/useWindowEventListener'
 
-const stepIndex = ref(1)
+const initialStep: number = 1
+const stepIndex: Ref<number> = ref(initialStep)
 const stepDescription: ComputedRef<string> = computed(() => signUpSteps[stepIndex.value - 1].description)
+
+useWindowEventListener('popstate', (event) => {
+  stepIndex.value = event.state?.stepIndex ?? initialStep
+})
+
+watchEffect(() => {
+  history.pushState( { stepIndex: stepIndex.value }, `Step ${stepIndex.value}`, `#step-${stepIndex.value}`)
+})
 
 function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
   e.preventDefault()
@@ -39,7 +48,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
 <template>
   <div class="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
     <div class="flex items-center justify-center py-12">
-      <div class="mx-auto grid w-[350px] gap-6 relative">
+      <div class="mx-auto grid w-[350px] gap-6">
         <div class="grid gap-2 text-center">
           <h1 class="text-3xl font-bold">
             {{ $t('sign-up:header') }}
@@ -55,7 +64,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
           :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
         >
           <Stepper
-            v-slot="{ isNextDisabled, nextStep, isPrevDisabled, prevStep }"
+            v-slot="{ isNextDisabled, nextStep }"
             v-model="stepIndex"
             class="block w-full"
           >
@@ -79,6 +88,14 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
                       <FormMessage />
                     </FormItem>
                   </FormField>
+
+                  <Button
+                    class="w-full"
+                    @click="meta.valid && nextStep()"
+                    type="button"
+                  >
+                    {{ $t('sign-up:step:cta') }}
+                  </Button>
                 </template>
 
                 <template v-if="stepIndex === 2">
@@ -101,30 +118,11 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
                       <FormMessage />
                     </FormItem>
                   </FormField>
+
+                  <Button v-if="isNextDisabled" type="submit" class="w-full">
+                    {{ $t('sign-up:cta') }}
+                  </Button>
                 </template>
-
-                <Button
-                  v-if="!isNextDisabled"
-                  class="w-full"
-                  @click="meta.valid && nextStep()"
-                  type="button"
-                >
-                  {{ $t('sign-up:step:cta') }}
-                </Button>
-
-                <Button
-                  v-if="!isPrevDisabled"
-                  variant="outline"
-                  size="icon"
-                  @click="prevStep()"
-                  class="absolute top-4 left-0"
-                >
-                  <ChevronLeft class="w-4 h-4" />
-                </Button>
-
-                <Button v-if="isNextDisabled" type="submit" class="w-full">
-                  {{ $t('sign-up:cta') }}
-                </Button>
               </div>
             </form>
           </Stepper>
