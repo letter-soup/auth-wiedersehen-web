@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
 
 const signInHandler = () => {
   console.log('debug:SignInView.vue:signInHandler; ')
@@ -28,7 +29,7 @@ const signInHandler = () => {
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label for="password">{{ $t('sign-in:password') }}</Label>
-              <a href="/reset-password" class="ml-auto inline-block text-sm underline">
+              <a href="/reset-password" class="ml-auto inline-block text-sm underline text-muted-foreground hover:text-primary">
                 {{ $t('sign-in:password-reset') }}
               </a>
             </div>
@@ -38,12 +39,11 @@ const signInHandler = () => {
             {{ $t('sign-in:cta') }}
           </Button>
         </div>
-        <div class="mt-4 text-center text-sm">
-          {{ $t('sign-in:no-account') }}
-          <a href="/sign-up" class="underline">
-            {{ $t('sign-in:sign-up') }}
-          </a>
-        </div>
+
+        <Separator class="mt-2" :label="$t('sign-in:no-account')" orientation="horizontal" />
+        <Button variant="link" as="a" href="/sign-up">
+          {{ $t('sign-in:sign-up') }}
+        </Button>
       </div>
     </div>
     <div class="hidden bg-muted lg:block">

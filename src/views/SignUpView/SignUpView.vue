@@ -13,8 +13,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
+import { Separator } from '@/components/ui/separator'
 import { formSchema, signUpSteps } from '@/views/SignUpView/constants'
 import { useWindowEventListener } from '@/composable/useWindowEventListener'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const initialStep: number = 1
 const stepIndex: Ref<number> = ref(initialStep)
@@ -27,6 +31,11 @@ useWindowEventListener('popstate', (event) => {
 watchEffect(() => {
   history.pushState( { stepIndex: stepIndex.value }, `Step ${stepIndex.value}`, `#step-${stepIndex.value}`)
 })
+
+const signUpAcknowledgementMap = {
+  termsOfService: `<a href="/terms" class="underline underline-offset-4 hover:text-primary">${t('sign-up:terms-of-service')}</a>`,
+  privacyPolicy: `<a href="/privacy" class="underline underline-offset-4 hover:text-primary">${t('sign-up:privacy-policy')}</a>`,
+}
 
 function validateEmail(
   values: Record<string, string>,
@@ -77,7 +86,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
           :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
         >
           <Stepper
-            v-slot="{ isNextDisabled, nextStep }"
+            v-slot="{ nextStep }"
             v-model="stepIndex"
             class="block w-full"
           >
@@ -94,7 +103,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
                 <template v-if="stepIndex === 1">
                   <FormField v-slot="{ componentField }" name="email">
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{{ $t('sign-up:email') }}</FormLabel>
                       <FormControl>
                         <Input id="email" type="email" v-bind="componentField" />
                       </FormControl>
@@ -114,7 +123,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
                 <template v-if="stepIndex === 2">
                   <FormField v-slot="{ componentField }" name="password">
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>{{ $t('sign-up:password') }}</FormLabel>
                       <FormControl>
                         <Input type="password" v-bind="componentField" />
                       </FormControl>
@@ -124,7 +133,7 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
 
                   <FormField v-slot="{ componentField }" name="confirmPassword">
                     <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
+                      <FormLabel>{{ $t('sign-up:confirm-password') }}</FormLabel>
                       <FormControl>
                         <Input type="password" v-bind="componentField" />
                       </FormControl>
@@ -132,20 +141,24 @@ function onSubmit(e: Event, meta:any, validate: () => void, values: any) {
                     </FormItem>
                   </FormField>
 
-                  <Button v-if="isNextDisabled" type="submit" class="w-full">
+                  <Button type="submit" class="w-full">
                     {{ $t('sign-up:cta') }}
                   </Button>
+
+                  <p
+                    class="px-8 text-center text-sm text-muted-foreground"
+                    v-html="$t('sign-up:cta-acknowledgement', signUpAcknowledgementMap)"
+                  />
                 </template>
               </div>
             </form>
           </Stepper>
         </Form>
-        <div class="mt-4 text-center text-sm">
-          {{ $t('sign-up:has-account') }}
-          <a href="/sign-in" class="underline">
-            {{ $t('sign-up:sign-in') }}
-          </a>
-        </div>
+
+        <Separator class="mt-2" :label="$t('sign-up:has-account')" orientation="horizontal" />
+        <Button variant="link" as="a" href="/sign-in">
+          {{ $t('sign-up:sign-in') }}
+        </Button>
       </div>
     </div>
     <div class="hidden bg-muted lg:block">

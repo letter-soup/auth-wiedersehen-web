@@ -6,8 +6,6 @@ const upperCaseSymbols = /[A-Z]+/
 const numericSymbols = /[0-9]+/
 const specialSymbols = /[!@#$%^&*()\-_+.]+/
 
-const passwordErrorMessage = 'Password must have at least 8 characters, lowercase and uppercase letters, numbers and special symbols'
-
 export const formSchema = [
   z.object({
     email: z.string().email(),
@@ -15,11 +13,11 @@ export const formSchema = [
   z
     .object({
       password: z.string()
-        .min(8, passwordErrorMessage)
-        .regex(lowerCaseSymbols, passwordErrorMessage)
-        .regex(upperCaseSymbols, passwordErrorMessage)
-        .regex(numericSymbols, passwordErrorMessage)
-        .regex(specialSymbols, passwordErrorMessage),
+        .min(8, 'error:sign-up:weak-password')
+        .regex(lowerCaseSymbols, 'error:sign-up:weak-password')
+        .regex(upperCaseSymbols, 'error:sign-up:weak-password')
+        .regex(numericSymbols, 'error:sign-up:weak-password')
+        .regex(specialSymbols, 'error:sign-up:weak-password'),
       confirmPassword: z.string()
     })
     .refine(
@@ -27,7 +25,7 @@ export const formSchema = [
         return values.password === values.confirmPassword
       },
       {
-        message: 'Passwords must match!',
+        message: 'error:sign-up:password-mismatch',
         path: ['confirmPassword']
       }
     )
