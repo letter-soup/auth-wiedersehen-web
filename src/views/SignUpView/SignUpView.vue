@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { Separator } from '@/components/ui/separator'
-import { formSchema, signUpSteps } from '@/views/SignUpView/constants'
+import { createFormSchema, signUpSteps } from '@/views/SignUpView/constants'
 import { useWindowEventListener } from '@/composable/useWindowEventListener'
 import { useI18n } from 'vue-i18n'
 
@@ -23,6 +23,7 @@ const { t } = useI18n()
 const initialStep: number = 1
 const stepIndex: Ref<number> = ref(initialStep)
 const stepDescription: ComputedRef<string> = computed(() => signUpSteps[stepIndex.value - 1].description)
+const formSchema: ComputedRef = computed(() => createFormSchema(t))
 
 useWindowEventListener('popstate', (event) => {
   stepIndex.value = event.state?.stepIndex ?? initialStep
@@ -33,8 +34,8 @@ watchEffect(() => {
 })
 
 const signUpAcknowledgementMap = {
-  termsOfService: `<a href="/terms" class="underline underline-offset-4 hover:text-primary">${t('sign-up:terms-of-service')}</a>`,
-  privacyPolicy: `<a href="/privacy" class="underline underline-offset-4 hover:text-primary">${t('sign-up:privacy-policy')}</a>`,
+  termsOfService: `<a target="_blank" href="/terms" class="underline underline-offset-4 hover:text-primary">${t('sign-up:terms-of-service')}</a>`,
+  privacyPolicy: `<a target="_blank" href="/privacy" class="underline underline-offset-4 hover:text-primary">${t('sign-up:privacy-policy')}</a>`,
 }
 
 function validateEmail(

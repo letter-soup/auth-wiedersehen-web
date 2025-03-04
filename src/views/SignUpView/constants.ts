@@ -6,30 +6,37 @@ const upperCaseSymbols = /[A-Z]+/
 const numericSymbols = /[0-9]+/
 const specialSymbols = /[!@#$%^&*()\-_+.]+/
 
-export const formSchema = [
-  z.object({
-    email: z.string().email(),
-  }),
-  z
-    .object({
-      password: z.string()
-        .min(8, 'error:sign-up:weak-password')
-        .regex(lowerCaseSymbols, 'error:sign-up:weak-password')
-        .regex(upperCaseSymbols, 'error:sign-up:weak-password')
-        .regex(numericSymbols, 'error:sign-up:weak-password')
-        .regex(specialSymbols, 'error:sign-up:weak-password'),
-      confirmPassword: z.string()
-    })
-    .refine(
-      (values) => {
-        return values.password === values.confirmPassword
-      },
-      {
-        message: 'error:sign-up:password-mismatch',
-        path: ['confirmPassword']
-      }
-    )
-]
+export const createFormSchema = (t: (key: string) => string) => {
+  const translations = {
+    weakPassword: t('error:sign-up:weak-password'),
+    passwordMismatch: t('error:sign-up:password-mismatch'),
+  }
+
+  return [
+    z.object({
+      email: z.string().email(),
+    }),
+    z
+      .object({
+        password: z.string()
+          .min(8, translations.weakPassword)
+          .regex(lowerCaseSymbols, translations.weakPassword)
+          .regex(upperCaseSymbols, translations.weakPassword)
+          .regex(numericSymbols, translations.weakPassword)
+          .regex(specialSymbols, translations.weakPassword),
+        confirmPassword: z.string()
+      })
+      .refine(
+        (values) => {
+          return values.password === values.confirmPassword
+        },
+        {
+          message: translations.passwordMismatch,
+          path: ['confirmPassword']
+        }
+      )
+  ]
+}
 
 export const signUpSteps: SignUpStep[] = [
   {
