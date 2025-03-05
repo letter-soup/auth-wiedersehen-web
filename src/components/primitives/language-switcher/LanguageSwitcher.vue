@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { Select, SelectItem } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
+import { Languages } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 
 const { locale: selectedLocale, availableLocales } = useI18n()
 </script>
 
 <template>
-  <Select>
-    <SelectItem v-for="locale in availableLocales" :key="locale" :value="locale"></SelectItem>
+  <Select v-model="selectedLocale">
+    <SelectTrigger class="w-fit h-fit">
+      <Languages :size="16" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem v-for="locale in availableLocales" :key="locale" :value="locale">
+        {{ $t(`language:${locale}`) }}
+      </SelectItem>
+    </SelectContent>
   </Select>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

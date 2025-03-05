@@ -2,6 +2,15 @@
   "error:sign-up:email-in-use": "Email уже занят. Попробуйте восстановить пароль",
   "error:sign-up:password-mismatch": "Пароли должны совпадать!",
   "error:sign-up:weak-password": "Пароль должен содержать от 8 заглавных и прописных латинских букв, чисел и специальных символов",
+  "footer:all-rights-reserved": "Все права защищены",
+  "footer:documentation": "Документация",
+  "footer:follow-us": "Соцсети",
+  "footer:legal": "Условия",
+  "footer:resources": "Ресурсы",
+  "language:en-US": "Английский (US)",
+  "language:ru-RU": "Русский",
+  "shared:privacy-policy": "Политика конфиденциальности",
+  "shared:terms-of-service": "Пользовательское соглашение",
   "sign-in:cta": "Вход",
   "sign-in:description": "Введите email, чтоб войти в аккаунт",
   "sign-in:email": "Email",
@@ -17,10 +26,10 @@
   "sign-up:has-account": "Уже зарегистрированы?",
   "sign-up:header": "Регистрация",
   "sign-up:password": "Пароль",
-  "sign-up:privacy-policy": "Политику конфиденциальности",
   "sign-up:sign-in": "Войдите в свой профиль",
   "sign-up:step-email:description": "Введи ваш email для создания аккаунта",
   "sign-up:step-password:description": "Придумайте сложный пароль",
   "sign-up:step:cta": "Продолжить",
-  "sign-up:terms-of-service": "Пользовательское соглашение"
+  "social-media:discord": "Discord",
+  "social-media:github": "GitHub"
 }
