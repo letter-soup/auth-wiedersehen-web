@@ -9,24 +9,24 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: SignInView
+      component: SignInView,
     },
     {
       path: '/sign-in',
       name: 'sign-in',
-      component: SignInView
+      component: SignInView,
     },
     {
       path: '/sign-up',
       name: 'sign-up',
-      component: SignUpView
+      component: SignUpView,
     },
     {
       path: '/reset-password',
       name: 'reset-password',
-      component: ResetPasswordView
-    }
-  ]
+      component: ResetPasswordView,
+    },
+  ],
 })
 
 export default router

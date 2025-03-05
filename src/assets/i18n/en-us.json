@@ -17,10 +17,17 @@
   "sign-up:has-account": "Already registered?",
   "sign-up:header": "Sign Up",
   "sign-up:password": "Password",
-  "sign-up:privacy-policy": "Privacy Policy",
   "sign-up:sign-in": "Sign into your account",
   "sign-up:step-email:description": "Enter your email below to create a new account",
   "sign-up:step-password:description": "Create a strong password",
   "sign-up:step:cta": "Next",
-  "sign-up:terms-of-service": "Terms of Service"
+  "footer:resources": "Resources",
+  "footer:documentation": "Documentation",
+  "footer:follow-us": "Follow us",
+  "footer:legal": "Legal",
+  "footer:all-rights-reserved": "All Rights Reserved.",
+  "shared:terms-of-service": "Terms of Service",
+  "shared:privacy-policy": "Privacy Policy",
+  "social-media:discord": "Discord",
+  "social-media:github": "GitHub"
 }

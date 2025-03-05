@@ -18,13 +18,14 @@ export const createFormSchema = (t: (key: string) => string) => {
     }),
     z
       .object({
-        password: z.string()
+        password: z
+          .string()
           .min(8, translations.weakPassword)
           .regex(lowerCaseSymbols, translations.weakPassword)
           .regex(upperCaseSymbols, translations.weakPassword)
           .regex(numericSymbols, translations.weakPassword)
           .regex(specialSymbols, translations.weakPassword),
-        confirmPassword: z.string()
+        confirmPassword: z.string(),
       })
       .refine(
         (values) => {
@@ -32,9 +33,9 @@ export const createFormSchema = (t: (key: string) => string) => {
         },
         {
           message: translations.passwordMismatch,
-          path: ['confirmPassword']
-        }
-      )
+          path: ['confirmPassword'],
+        },
+      ),
   ]
 }
 
@@ -42,11 +43,11 @@ export const signUpSteps: SignUpStep[] = [
   {
     step: 1,
     type: 'email',
-    description: 'sign-up:step-email:description'
+    description: 'sign-up:step-email:description',
   },
   {
     step: 2,
     type: 'password',
-    description: 'sign-up:step-password:description'
+    description: 'sign-up:step-password:description',
   },
 ]
