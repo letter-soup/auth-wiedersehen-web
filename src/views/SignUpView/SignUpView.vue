@@ -39,29 +39,30 @@ watchEffect(() => {
   )
 })
 
-const signUpAcknowledgementMap = {
-  termsOfService: `<a target="_blank" href="/terms" class="underline underline-offset-4 hover:text-primary">${t('shared:terms-of-service')}</a>`,
-  privacyPolicy: `<a target="_blank" href="/privacy" class="underline underline-offset-4 hover:text-primary">${t('shared:privacy-policy')}</a>`,
-}
+const signUpAcknowledgementMap: ComputedRef<Record<string, string>> = computed(() => ({
+  termsOfService: `<a target="_blank" href="/terms" class="underline underline-offset-4 hover:text-primary">${t('sign-up:terms-of-service')}</a>`,
+  privacyPolicy: `<a target="_blank" href="/privacy" class="underline underline-offset-4 hover:text-primary">${t('sign-up:privacy-policy')}</a>`,
+}))
 
-function validateEmail(
+async function validateEmail(
   values: Record<string, string>,
+  validate: () => Promise<any>,
   nextStep: () => void,
   setFieldError: (field: string, error: string) => void,
 ) {
+  const validationResult = await validate()
   // if (emailAlreadyRegistered) {
   //   setFieldError('email', 'Email is already in use. Try resetting your password')
   //   return
   // }
 
-  nextStep()
+  validationResult.valid && nextStep()
 }
 
-function onSubmit(e: Event, meta: any, validate: () => void, values: any) {
-  e.preventDefault()
-  validate()
+async function onSubmit(e: Event, validate: () => Promise<any>, values: any) {
+  const validationResult = await validate()
 
-  if (stepIndex.value === signUpSteps.length && meta.valid) {
+  if (stepIndex.value === signUpSteps.length && validationResult.valid) {
     toast({
       title: 'You submitted the following values:',
       description: h(
@@ -86,13 +87,13 @@ function onSubmit(e: Event, meta: any, validate: () => void, values: any) {
         </p>
       </div>
       <Form
-        v-slot="{ meta, values, validate, setFieldError }"
+        v-slot="{ values, validate, setFieldError }"
         as=""
         keep-values
         :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
       >
         <Stepper v-slot="{ nextStep }" v-model="stepIndex" class="block w-full">
-          <form @submit="(e) => onSubmit(e, meta, validate, values)">
+          <form @submit.prevent="(e) => onSubmit(e, validate, values)">
             <div class="flex w-full flex-start gap-2">
               <StepperItem
                 v-for="step in signUpSteps"
@@ -112,7 +113,14 @@ function onSubmit(e: Event, meta: any, validate: () => void, values: any) {
                   <FormItem>
                     <FormLabel>{{ $t('sign-up:email') }}</FormLabel>
                     <FormControl>
-                      <Input id="email" type="email" v-bind="componentField" />
+                      <Input
+                        id="email"
+                        type="email"
+                        v-bind="componentField"
+                        @keydown.enter.prevent="
+                          validateEmail(values, validate, nextStep, setFieldError)
+                        "
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -120,7 +128,7 @@ function onSubmit(e: Event, meta: any, validate: () => void, values: any) {
 
                 <Button
                   class="w-full"
-                  @click="meta.valid && validateEmail(values, nextStep, setFieldError)"
+                  @click="validateEmail(values, validate, nextStep, setFieldError)"
                   type="button"
                 >
                   {{ $t('sign-up:step:cta') }}

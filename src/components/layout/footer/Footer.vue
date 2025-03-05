@@ -50,12 +50,12 @@ import LanguageSwitcher from '@/components/primitives/language-switcher/Language
             <ul class="text-gray-600 dark:text-gray-400 space-y-2">
               <li>
                 <a href="/terms" target="_blank" class="hover:underline">
-                  {{ $t('shared:terms-of-service') }}
+                  {{ $t('footer:terms-of-service') }}
                 </a>
               </li>
               <li>
                 <a href="/privacy" target="_blank" class="hover:underline">
-                  {{ $t('shared:privacy-policy') }}
+                  {{ $t('footer:privacy-policy') }}
                 </a>
               </li>
             </ul>
@@ -65,7 +65,7 @@ import LanguageSwitcher from '@/components/primitives/language-switcher/Language
       <Separator orientation="horizontal" class="my-5" />
       <div class="flex justify-between items-center">
         <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-          © 2025 <a href="/" class="hover:underline">Auth Wiedersehen™</a>.
+          © 2025 <RouterLink to="/" class="hover:underline">Auth Wiedersehen™</RouterLink>.
           {{ $t('footer:all-rights-reserved') }}
         </span>
         <LanguageSwitcher />
