@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
 import { computed, type ComputedRef, h, type Ref, ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 import { Stepper, StepperItem, StepperTrigger } from '@/components/ui/stepper'
 import {
   Form,
@@ -15,10 +16,10 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { Separator } from '@/components/ui/separator'
 import { createFormSchema, signUpSteps } from '@/views/SignUpView/constants'
-import { useWindowEventListener } from '@/composable/useWindowEventListener'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const initialStep: number = 1
 const stepIndex: Ref<number> = ref(initialStep)
@@ -27,16 +28,23 @@ const stepDescription: ComputedRef<string> = computed(
 )
 const formSchema: ComputedRef = computed(() => createFormSchema(t))
 
-useWindowEventListener('popstate', (event) => {
-  stepIndex.value = event.state?.stepIndex ?? initialStep
+router.beforeEach((to, from, next) => {
+  if (to.name !== from.name) {
+    return next()
+  }
+
+  const toStep = parseInt(to.query.step as string) || initialStep
+  if (toStep < stepIndex.value) {
+    stepIndex.value = toStep
+  }
+  return next()
 })
 
 watchEffect(() => {
-  history.pushState(
-    { stepIndex: stepIndex.value },
-    `Step ${stepIndex.value}`,
-    `#step-${stepIndex.value}`,
-  )
+  router.push({
+    ...router.currentRoute.value,
+    query: { step: stepIndex.value }
+  })
 })
 
 const signUpAcknowledgementMap: ComputedRef<Record<string, string>> = computed(() => ({
