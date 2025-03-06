@@ -1,4 +1,3 @@
-export const COPYRIGHT_YEAR = new Date().getFullYear()
 export const FOOTER_LINK_GROUPS = [
   {
     key: 'footer:resources',
