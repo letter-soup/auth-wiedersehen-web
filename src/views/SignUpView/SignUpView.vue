@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
 watchEffect(() => {
   router.push({
     ...router.currentRoute.value,
-    query: { step: stepIndex.value }
+    query: { step: stepIndex.value },
   })
 })
 

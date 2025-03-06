@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SOCIAL_MEDIA } from '@/components/layout/footer/constants'
+import { FOOTER_LINK_GROUPS } from '@/components/layout/footer/constants'
 import { Separator } from '@/components/ui/separator'
 import LanguageSwitcher from '@/components/primitives/language-switcher/LanguageSwitcher.vue'
 </script>
@@ -10,52 +10,15 @@ import LanguageSwitcher from '@/components/primitives/language-switcher/Language
       class="col-start-3 col-span-8 lg:col-start-4 lg:col-span-6 max-sm:col-start-2 max-sm:col-span-10"
     >
       <div class="grid gap-6 grid-cols-3">
-        <div class="flex justify-center">
+        <div v-for="{ key, links } in FOOTER_LINK_GROUPS" :key class="flex justify-center">
           <div class="w-fit">
             <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-              {{ $t('footer:resources') }}
+              {{ $t(key) }}
             </h2>
             <ul class="text-gray-600 dark:text-gray-400 space-y-2">
-              <li>
-                <a
-                  class="hover:underline"
-                  target="_blank"
-                  href="https://github.com/letter-soup/auth-wiedersehen-web"
-                >
-                  {{ $t('footer:documentation') }}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="flex justify-center">
-          <div class="w-fit">
-            <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-              {{ $t('footer:follow-us') }}
-            </h2>
-            <ul class="text-gray-600 dark:text-gray-400 space-y-2">
-              <li v-for="socialMedia in SOCIAL_MEDIA" :key="socialMedia.key">
-                <a :href="socialMedia.url" target="_blank" class="hover:underline">
-                  {{ $t(`social-media:${socialMedia.key}`) }}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="flex justify-center">
-          <div class="w-fit">
-            <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-              {{ $t('footer:legal') }}
-            </h2>
-            <ul class="text-gray-600 dark:text-gray-400 space-y-2">
-              <li>
-                <a href="/terms" target="_blank" class="hover:underline">
-                  {{ $t('footer:terms-of-service') }}
-                </a>
-              </li>
-              <li>
-                <a href="/privacy" target="_blank" class="hover:underline">
-                  {{ $t('footer:privacy-policy') }}
+              <li v-for="link in links" :key="link.label">
+                <a class="hover:underline" target="_blank" :href="link.url">
+                  {{ $t(link.label) }}
                 </a>
               </li>
             </ul>
