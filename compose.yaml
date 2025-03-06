@@ -5,6 +5,6 @@ services:
     build:
       context: .
       tags:
-        - latest
+        - auth-wiedersehen-web:latest
     ports:
       - "8080:80"
