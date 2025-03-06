@@ -5,7 +5,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import { i18n } from '@/utils/locale'
+import { i18n } from '@/lib/locale'
 
 const app = createApp(App)
 

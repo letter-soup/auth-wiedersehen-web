@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import SignInView from '@/views/SignInView.vue'
-import SignUpView from '@/views/SignUpView.vue'
+import SignUpView from '@/views/SignUpView/SignUpView.vue'
 import ResetPasswordView from '@/views/ResetPasswordView.vue'
 
 const router = createRouter({
@@ -9,24 +9,24 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: SignInView
+      component: SignInView,
     },
     {
       path: '/sign-in',
       name: 'sign-in',
-      component: SignInView
+      component: SignInView,
     },
     {
       path: '/sign-up',
       name: 'sign-up',
-      component: SignUpView
+      component: SignUpView,
     },
     {
       path: '/reset-password',
       name: 'reset-password',
-      component: ResetPasswordView
-    }
-  ]
+      component: ResetPasswordView,
+    },
+  ],
 })
 
 export default router
