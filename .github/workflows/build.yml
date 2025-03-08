@@ -12,5 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build Docker Image
+      - name: npm install
+        run: npm install
+
+      - name: run linters
+        run: npm run lint
+
+      - name: run unit tests
+        run: npm run test:unit
+
+      - name: build docker image
         run: docker compose build auth-wiedersehen-web
