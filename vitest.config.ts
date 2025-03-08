@@ -12,7 +12,13 @@ export default mergeConfig(
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
         provider: 'istanbul',
-        reporter: ['html'],
+        reporter: ['html', 'cobertura'],
+        thresholds: {
+          branches: 90,
+          statements: 90,
+          functions: 90,
+          lines: 90,
+        },
         exclude: [
           '**/assets/**',
           '**/e2e/**',
