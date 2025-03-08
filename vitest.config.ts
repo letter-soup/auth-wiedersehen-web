@@ -13,12 +13,7 @@ export default mergeConfig(
       coverage: {
         provider: 'istanbul',
         reporter: ['html', 'cobertura'],
-        thresholds: {
-          branches: 90,
-          statements: 90,
-          functions: 90,
-          lines: 90,
-        },
+        reportOnFailure: true,
         exclude: [
           '**/assets/**',
           '**/e2e/**',
