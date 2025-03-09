@@ -5,8 +5,6 @@ COPY package-lock.json ./
 
 RUN npm install
 COPY . .
-RUN npm run lint
-RUN npm run test:unit
 RUN npm run build
 
 FROM nginx:stable-alpine-slim AS runtime

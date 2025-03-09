@@ -12,7 +12,8 @@ export default mergeConfig(
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
         provider: 'istanbul',
-        reporter: ['html'],
+        reporter: ['html', 'cobertura'],
+        reportOnFailure: true,
         exclude: [
           '**/assets/**',
           '**/e2e/**',

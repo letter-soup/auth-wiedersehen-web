@@ -17,6 +17,7 @@ import { toast } from '@/components/ui/toast'
 import { Separator } from '@/components/ui/separator'
 import { createFormSchema, signUpSteps } from '@/views/SignUpView/constants'
 import { useI18n } from 'vue-i18n'
+import type { TFormValidationCallback } from '@/lib/types.ts'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -54,20 +55,22 @@ const signUpAcknowledgementMap: ComputedRef<Record<string, string>> = computed((
 
 async function validateEmail(
   values: Record<string, string>,
-  validate: () => Promise<any>,
+  validate: TFormValidationCallback,
   nextStep: () => void,
   setFieldError: (field: string, error: string) => void,
 ) {
   const validationResult = await validate()
-  // if (emailAlreadyRegistered) {
-  //   setFieldError('email', 'Email is already in use. Try resetting your password')
-  //   return
-  // }
+  if (!validationResult.valid) {
+    setFieldError('email', 'Email is already in use. Try resetting your password')
+    return
+  }
 
-  validationResult.valid && nextStep()
+  if (validationResult.valid) {
+    nextStep()
+  }
 }
 
-async function onSubmit(e: Event, validate: () => Promise<any>, values: any) {
+async function onSubmit(e: Event, validate: TFormValidationCallback, values: Record<string, string>) {
   const validationResult = await validate()
 
   if (stepIndex.value === signUpSteps.length && validationResult.valid) {
