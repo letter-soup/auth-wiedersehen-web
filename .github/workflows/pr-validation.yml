@@ -42,5 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
+      - uses: actions/checkout@v2
+
       - name: build docker image
         run: docker compose build auth-wiedersehen-web
