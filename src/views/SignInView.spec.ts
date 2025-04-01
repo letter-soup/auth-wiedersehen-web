@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/lib/tests/mount'
 import SignInView from '@/views/SignInView.vue'
 
 describe('SignInView (snapshot)', () => {

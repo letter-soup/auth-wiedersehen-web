@@ -9,7 +9,7 @@ exports[`LanguageSwitcher (snapshot) > renders properly 1`] = `
 <!--teleport end-->
 <select default-value="en-US" style="position: absolute; border: 0px; width: 1px; display: inline-block; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; word-wrap: normal;" data-testid="language-switcher" data-selected-locale="en-US" aria-hidden="true" tabindex="-1" value="en-US">
   <!---->
-  <option value="en-US">English (US)</option>
-  <option value="ru-RU">Русский (RU)</option>
+  <option value="en-US">language:en-US</option>
+  <option value="ru-RU">language:ru-RU</option>
 </select>"
 `;

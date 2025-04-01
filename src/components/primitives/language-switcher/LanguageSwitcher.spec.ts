@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/lib/tests/mount'
 import LanguageSwitcher from '@/components/primitives/language-switcher/LanguageSwitcher.vue'
 
 vi.mock('lucide-vue-next', () => ({
