@@ -1,5 +1,5 @@
 {
-  "error:sign-up:email-in-use": "Email is already in use. Try resetting your password",
+  "email-already-taken": "Email is already in use. Try resetting your password",
   "error:sign-up:password-mismatch": "Passwords must match!",
   "error:sign-up:weak-password": "Password must have at least 8 characters, lowercase and uppercase letters, numbers and special symbols",
   "footer:all-rights-reserved": "All Rights Reserved.",
