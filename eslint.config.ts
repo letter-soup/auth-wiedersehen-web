@@ -38,7 +38,11 @@ export default defineConfigWithVueTs(
 
   {
     ignores: [
-      'src/components/ui'
+      'src/components/ui',
+      '**/__mock__/**',
+      '**/__snapshots__/**',
+      '**/__fixture__/**',
+      '**/__temp__/**',
     ],
   }
 )
