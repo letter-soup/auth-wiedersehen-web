@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
 import { computed, type ComputedRef, h, type Ref, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import { Stepper, StepperItem, StepperTrigger } from '@/components/ui/stepper'
 import {
   Form,
@@ -20,7 +20,6 @@ import { useI18n } from 'vue-i18n'
 import type { TFormValidationCallback } from '@/lib/types'
 import { createFormSchema } from '@/views/SignUpView/lib/form-schema'
 import { validateEmail } from '@/views/SignUpView/lib/validate-email'
-import { useRouterGuard } from '@/composable/useRouterGuard'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -32,19 +31,17 @@ const stepDescription: ComputedRef<string> = computed(
 )
 const formSchema: ComputedRef = computed(() => createFormSchema(t))
 
-useRouterGuard(() =>
-  router.beforeEach((to, from, next) => {
-    if (to.name !== from.name) {
-      return next()
-    }
-
-    const toStep = parseInt(to.query.step as string) || initialStep
-    if (toStep < stepIndex.value) {
-      stepIndex.value = toStep
-    }
+onBeforeRouteUpdate((to, from, next) => {
+  if (to.name !== from.name) {
     return next()
-  }),
-)
+  }
+
+  const toStep = parseInt(to.query.step as string) || initialStep
+  if (toStep < stepIndex.value) {
+    stepIndex.value = toStep
+  }
+  return next()
+})
 
 watch(
   () => stepIndex.value,
@@ -94,7 +91,6 @@ async function onSubmit(
       </div>
       <Form
         v-slot="{ values, validate, setFieldError }"
-        as=""
         keep-values
         :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
       >

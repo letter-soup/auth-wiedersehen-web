@@ -1,5 +1,5 @@
 import '@/views/SignUpView/lib/__mock__/validate-email.mock'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { flushPromises } from '@vue/test-utils'
 import { mount } from '@/lib/tests/mount'
 import SignUpView from '@/views/SignUpView/SignUpView.vue'
