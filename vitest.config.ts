@@ -7,12 +7,14 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
+      globals: true,
       setupFiles: 'vitest.setup.ts',
       exclude: [...configDefaults.exclude, 'e2e/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
         provider: 'istanbul',
-        reporter: ['html'],
+        reporter: ['html', 'cobertura'],
+        reportOnFailure: true,
         exclude: [
           '**/assets/**',
           '**/e2e/**',

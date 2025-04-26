@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
-import { computed, type ComputedRef, h, type Ref, ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, type ComputedRef, h, type Ref, ref, watch } from 'vue'
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import { Stepper, StepperItem, StepperTrigger } from '@/components/ui/stepper'
 import {
   Form,
@@ -15,8 +15,11 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { Separator } from '@/components/ui/separator'
-import { createFormSchema, signUpSteps } from '@/views/SignUpView/constants'
+import { SIGN_UP_STEPS } from '@/views/SignUpView/lib/constants'
 import { useI18n } from 'vue-i18n'
+import type { TFormValidationCallback } from '@/lib/types'
+import { createFormSchema } from '@/views/SignUpView/lib/form-schema'
+import { validateEmail } from '@/views/SignUpView/lib/validate-email'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -24,11 +27,11 @@ const router = useRouter()
 const initialStep: number = 1
 const stepIndex: Ref<number> = ref(initialStep)
 const stepDescription: ComputedRef<string> = computed(
-  () => signUpSteps[stepIndex.value - 1].description,
+  () => SIGN_UP_STEPS[stepIndex.value - 1].description,
 )
 const formSchema: ComputedRef = computed(() => createFormSchema(t))
 
-router.beforeEach((to, from, next) => {
+onBeforeRouteUpdate((to, from, next) => {
   if (to.name !== from.name) {
     return next()
   }
@@ -40,37 +43,29 @@ router.beforeEach((to, from, next) => {
   return next()
 })
 
-watchEffect(() => {
-  router.push({
-    ...router.currentRoute.value,
-    query: { step: stepIndex.value },
-  })
-})
+watch(
+  () => stepIndex.value,
+  (value) => {
+    router.push({
+      ...router.currentRoute.value,
+      query: { step: value },
+    })
+  },
+)
 
 const signUpAcknowledgementMap: ComputedRef<Record<string, string>> = computed(() => ({
   termsOfService: `<a target="_blank" href="/terms" class="underline underline-offset-4 hover:text-primary">${t('sign-up:terms-of-service')}</a>`,
   privacyPolicy: `<a target="_blank" href="/privacy" class="underline underline-offset-4 hover:text-primary">${t('sign-up:privacy-policy')}</a>`,
 }))
 
-async function validateEmail(
+async function onSubmit(
+  e: Event,
+  validate: TFormValidationCallback,
   values: Record<string, string>,
-  validate: () => Promise<any>,
-  nextStep: () => void,
-  setFieldError: (field: string, error: string) => void,
 ) {
   const validationResult = await validate()
-  // if (emailAlreadyRegistered) {
-  //   setFieldError('email', 'Email is already in use. Try resetting your password')
-  //   return
-  // }
 
-  validationResult.valid && nextStep()
-}
-
-async function onSubmit(e: Event, validate: () => Promise<any>, values: any) {
-  const validationResult = await validate()
-
-  if (stepIndex.value === signUpSteps.length && validationResult.valid) {
+  if (stepIndex.value === SIGN_UP_STEPS.length && validationResult.valid) {
     toast({
       title: 'You submitted the following values:',
       description: h(
@@ -96,7 +91,6 @@ async function onSubmit(e: Event, validate: () => Promise<any>, values: any) {
       </div>
       <Form
         v-slot="{ values, validate, setFieldError }"
-        as=""
         keep-values
         :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
       >
@@ -104,7 +98,7 @@ async function onSubmit(e: Event, validate: () => Promise<any>, values: any) {
           <form @submit.prevent="(e) => onSubmit(e, validate, values)">
             <div class="flex w-full flex-start gap-2">
               <StepperItem
-                v-for="step in signUpSteps"
+                v-for="step in SIGN_UP_STEPS"
                 :key="step.step"
                 class="hidden"
                 :step="step.step"
@@ -115,64 +109,71 @@ async function onSubmit(e: Event, validate: () => Promise<any>, values: any) {
               </StepperItem>
             </div>
 
-            <div class="flex flex-col gap-4">
-              <template v-if="stepIndex === 1">
-                <FormField v-slot="{ componentField }" name="email">
-                  <FormItem>
-                    <FormLabel>{{ $t('sign-up:email') }}</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="email"
-                        type="email"
-                        v-bind="componentField"
-                        @keydown.enter.prevent="
-                          validateEmail(values, validate, nextStep, setFieldError)
-                        "
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
+            <div
+              class="flex flex-col gap-4"
+              v-if="stepIndex === 1"
+              data-testid="sign-up-step-email"
+            >
+              <FormField v-slot="{ componentField }" name="email">
+                <FormItem>
+                  <FormLabel>{{ $t('sign-up:email') }}</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="email"
+                      type="email"
+                      v-bind="componentField"
+                      @keydown.enter.prevent="
+                        validateEmail(values, validate, nextStep, setFieldError, $t)
+                      "
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
-                <Button
-                  class="w-full"
-                  @click="validateEmail(values, validate, nextStep, setFieldError)"
-                  type="button"
-                >
-                  {{ $t('sign-up:step:cta') }}
-                </Button>
-              </template>
+              <Button
+                id="cta"
+                class="w-full"
+                @click="validateEmail(values, validate, nextStep, setFieldError, $t)"
+                type="button"
+              >
+                {{ $t('sign-up:step:cta') }}
+              </Button>
+            </div>
 
-              <template v-if="stepIndex === 2">
-                <FormField v-slot="{ componentField }" name="password">
-                  <FormItem>
-                    <FormLabel>{{ $t('sign-up:password') }}</FormLabel>
-                    <FormControl>
-                      <Input type="password" v-bind="componentField" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
+            <div
+              class="flex flex-col gap-4"
+              v-if="stepIndex === 2"
+              data-testid="sign-up-step-password"
+            >
+              <FormField v-slot="{ componentField }" name="password">
+                <FormItem>
+                  <FormLabel>{{ $t('sign-up:password') }}</FormLabel>
+                  <FormControl>
+                    <Input id="password" type="password" v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
-                <FormField v-slot="{ componentField }" name="confirmPassword">
-                  <FormItem>
-                    <FormLabel>{{ $t('sign-up:confirm-password') }}</FormLabel>
-                    <FormControl>
-                      <Input type="password" v-bind="componentField" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
+              <FormField v-slot="{ componentField }" name="confirmPassword">
+                <FormItem>
+                  <FormLabel>{{ $t('sign-up:confirm-password') }}</FormLabel>
+                  <FormControl>
+                    <Input id="confirm-password" type="password" v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
-                <Button type="submit" class="w-full">
-                  {{ $t('sign-up:cta') }}
-                </Button>
+              <Button type="submit" class="w-full">
+                {{ $t('sign-up:cta') }}
+              </Button>
 
-                <p
-                  class="px-8 text-center text-sm text-muted-foreground"
-                  v-html="$t('sign-up:cta-acknowledgement', signUpAcknowledgementMap)"
-                />
-              </template>
+              <p
+                class="px-8 text-center text-sm text-muted-foreground"
+                v-html="$t('sign-up:cta-acknowledgement', signUpAcknowledgementMap)"
+              />
             </div>
           </form>
         </Stepper>

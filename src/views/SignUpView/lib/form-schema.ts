@@ -1,10 +1,5 @@
 import * as z from 'zod'
-import type { SignUpStep } from '@/views/SignUpView/types'
-
-const lowerCaseSymbols = /[a-z]+/
-const upperCaseSymbols = /[A-Z]+/
-const numericSymbols = /[0-9]+/
-const specialSymbols = /[!@#$%^&*()\-_+.]+/
+import { PASSWORD_REQUIREMENTS } from '@/views/SignUpView/lib/constants'
 
 export const createFormSchema = (t: (key: string) => string) => {
   const translations = {
@@ -21,10 +16,10 @@ export const createFormSchema = (t: (key: string) => string) => {
         password: z
           .string()
           .min(8, translations.weakPassword)
-          .regex(lowerCaseSymbols, translations.weakPassword)
-          .regex(upperCaseSymbols, translations.weakPassword)
-          .regex(numericSymbols, translations.weakPassword)
-          .regex(specialSymbols, translations.weakPassword),
+          .regex(PASSWORD_REQUIREMENTS.lowerCaseSymbols, translations.weakPassword)
+          .regex(PASSWORD_REQUIREMENTS.upperCaseSymbols, translations.weakPassword)
+          .regex(PASSWORD_REQUIREMENTS.numericSymbols, translations.weakPassword)
+          .regex(PASSWORD_REQUIREMENTS.specialSymbols, translations.weakPassword),
         confirmPassword: z.string(),
       })
       .refine(
@@ -38,16 +33,3 @@ export const createFormSchema = (t: (key: string) => string) => {
       ),
   ]
 }
-
-export const signUpSteps: SignUpStep[] = [
-  {
-    step: 1,
-    type: 'email',
-    description: 'sign-up:step-email:description',
-  },
-  {
-    step: 2,
-    type: 'password',
-    description: 'sign-up:step-password:description',
-  },
-]

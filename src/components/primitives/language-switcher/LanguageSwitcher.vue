@@ -7,7 +7,11 @@ const { locale: selectedLocale, availableLocales } = useI18n()
 </script>
 
 <template>
-  <Select v-model="selectedLocale">
+  <Select
+    v-model="selectedLocale"
+    data-testid="language-switcher"
+    :data-selected-locale="selectedLocale"
+  >
     <SelectTrigger class="w-fit h-fit">
       <Languages :size="16" />
     </SelectTrigger>
